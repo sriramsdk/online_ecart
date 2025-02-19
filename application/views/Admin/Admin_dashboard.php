@@ -38,12 +38,22 @@
                                     <input type="text" class="form-control" id="product_name" name="product_name" required>
                                 </div>
                                 <div class="mb-3">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="company" name="company" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <input type="text" class="form-control" id="category" name="category" required>
+                                </div>
+                                <div class="row d-flex">
+                                <div class="mb-3 col-6">
                                     <label class="form-label">Price</label>
                                     <input type="text" class="form-control" id="product_price" name="product_price" required>
                                 </div>
-                                <div class="mb-3">
+                                <div class="mb-3 col-6">
                                     <label class="form-label">Discount (%)</label>
                                     <input type="text" class="form-control" id="product_discount" name="product_discount" required>
+                                </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Final Price</label>
@@ -81,6 +91,12 @@
                 product_name: {
                     required: true
                 },
+                company: {
+                    required: true
+                },
+                category: {
+                    required: true
+                },
                 product_price: {
                     required: true,
                     number: true,  
@@ -103,6 +119,12 @@
             messages: {
                 product_name: {
                     required: "Enter Product Name",
+                },
+                company: {
+                    required: "Enter Company Name",
+                },
+                category: {
+                    required: "Enter Category",
                 },
                 product_price: {
                     required: "Enter Product Price",
