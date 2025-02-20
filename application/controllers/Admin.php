@@ -76,7 +76,7 @@ class Admin extends CI_Controller {
 
         if (!$this->upload->do_upload('product_image')) {
             $error = $this->upload->display_errors();
-            echo json_encode(['status' => 'failed', 'message' => 'Failed to upload image']);
+            echo json_encode(['status' => 'error','title' => 'Image Not Uploaded', 'message' => 'Failed to upload image']);
         } else {
             $upload_data = $this->upload->data();
             $image_path = 'uploads/products/' . $upload_data['file_name'];
@@ -91,8 +91,8 @@ class Admin extends CI_Controller {
             $product_data = array(
                 'product_name' => $product_name,
                 'product_price' => $product_price,
-                'discount' => $product_discount,
-                'product_discount' => $final_price,
+                'product_discount' => $product_discount,
+                'final_price' => $final_price,
                 'product_image' => $image_path,
                 'company' => $company,
                 'category' => $image_path
@@ -101,12 +101,22 @@ class Admin extends CI_Controller {
             $response = $this->Product_Model->insert_product($product_data);
 
             if($response){
-                echo json_encode(['status' => 'success', 'message' => "Product added successfully"]);
+                echo json_encode(['status' => 'success','title' => 'Product Added', 'message' => "Product added successfully"]);
             }else{
-                echo json_encode(['status' => 'failed', 'message' => "Product not added"]);   
+                echo json_encode(['status' => 'error','title' => 'Product Not Added', 'message' => "Product not added"]);   
             }
             
         }
+    }
+
+    public function get_all_products(){
+        $products = $this->Product_Model->get_products();
+        if(empty($products)){
+            echo json_encode(['status' => 'error', 'title' => 'Products not fetched', 'message' => 'Products not fetched']);
+        }else{
+            echo json_encode(['status' => 'success', 'title' => 'Products fetched', 'message' => 'Products fetched successfully', 'data' => $products]);
+        }
+        
     }
 
 }

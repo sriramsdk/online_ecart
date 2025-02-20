@@ -17,11 +17,15 @@
     <div class="tab-content" id="myTabContent">
 
         <!-- Products Section Start -->
-        <div class="tab-pane fade show active mt-2" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
+        <div class="tab-pane fade show active mt-3" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
             <!-- Add Product Button -->
             <button class="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#addProductModal">
                 + Add Product
             </button>
+
+            <div class="row" id="product-list">
+                <!-- Products will be dynamically added here -->
+            </div>
 
             <!-- Add Product Modal -->
             <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
@@ -84,6 +88,51 @@
 <!-- Script section starts -->
 <script>
     $(document).ready(function(){
+
+        // load products functions
+        function load_products(){
+            $.ajax({
+                url: "<?php echo site_url('Admin/get_all_products')?>",
+                method: "GET",
+                contentType: false,
+                processData: false,
+                success:function(response){
+                    var response = JSON.parse(response);
+                    if(response.status === "success"){
+                        console.log(response);
+                        var products = response.data;
+                        $("#product-list").empty();
+                        if(products.length !== 0){
+                            $.each(products, function (index, product) {
+                                let productCard = `
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card">
+                                            <img src="<?php echo base_url('/');?>${product.product_image}" class="card-img-top" alt="Product Image" width="100">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${product.product_name}</h5>
+                                                <p class="card-text">Price: $${product.product_price}</p>
+                                                <button class="btn btn-warning btn-sm edit-product" data-index="${product.id}">Edit</button>
+                                                <button class="btn btn-danger btn-sm delete-product" data-index="${product.id}">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                                $("#product-list").append(productCard);
+                            });
+                        }
+                    }else{
+                        console.log("No records");
+                        $("#product-list").empty();
+                    }
+                    
+                },
+                error:function(xhr,status,error){
+                    console.log(error);
+                }
+            })
+        }
+
+        load_products();
 
         // Add Proudct form validation
         $("#addProductForm").validate({
@@ -177,12 +226,50 @@
                     processData: false,
                     success:function(response){
                         console.log(response);
+                        var response = JSON.parse(response);
+                        Swal.fire({
+                            icon: response.status,
+                            title: response.title,
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            location.reload();
+                        });
                     },
                     error:function(xhr,status,error){
                         console.log('Ajax error: '+status+' '+error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Something went wrong',
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            location.reload();
+                        });
                     }
                 });
             }
+        });
+
+        $(document).on('click','.delete-product',function(){
+            var id = $(this).attr('data-index');
+            Swal.fire({
+                icon: 'info',
+                title: 'Delete',
+                text: 'Are you sure want to delete this product?',
+                width: '350px',
+                height: '350px',
+                showConfirmButton: true,
+                showCancelButton: true,
+            }).then((result) => {
+                if(result.isConfirmed){
+                    $.ajax({
+
+                    });
+                }
+                console.log(result);
+            });
+            console.log(id);
         });
 
     });

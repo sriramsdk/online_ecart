@@ -8,6 +8,11 @@ class Product_Model extends CI_Model{
         return $this->db->insert_id(); // Return the insert ID to confirm the record was added
     }
 
+    public function get_products(){
+        $data = $this->db->select('*')->from('products')->get()->result_array();
+        return $data;
+    }
+
 }
 
 ?>
