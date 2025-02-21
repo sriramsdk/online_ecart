@@ -50,14 +50,14 @@
                                     <input type="text" class="form-control" id="category" name="category" required>
                                 </div>
                                 <div class="row d-flex">
-                                <div class="mb-3 col-6">
-                                    <label class="form-label">Price</label>
-                                    <input type="text" class="form-control" id="product_price" name="product_price" required>
-                                </div>
-                                <div class="mb-3 col-6">
-                                    <label class="form-label">Discount (%)</label>
-                                    <input type="text" class="form-control" id="product_discount" name="product_discount" required>
-                                </div>
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Price</label>
+                                        <input type="text" class="form-control" id="product_price" name="product_price" required>
+                                    </div>
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Discount (%)</label>
+                                        <input type="text" class="form-control" id="product_discount" name="product_discount" required>
+                                    </div>
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Final Price</label>
@@ -73,13 +73,63 @@
                     </div>
                 </div>
             </div>
-            
+
+            <!-- Edit Product Modal -->
+            <div class="modal fade" id="editProductModal" tabindex="-1" aria-labelledby="editProductModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Edit Product</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="editProductForm">
+                                <input type="hidden" id="edit_product_id"> <!-- Hidden ID Field -->
+                                <div class="d-flex justify-content-center">
+                                    <img id="edit_product_image_preview" src="" alt="Product Image" class="img-fluid mt-2" width="150">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Product Name</label>
+                                    <input type="text" class="form-control" id="edit_product_name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Company</label>
+                                    <input type="text" class="form-control" id="edit_company" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Category</label>
+                                    <input type="text" class="form-control" id="edit_category" required>
+                                </div>
+                                <div class="row d-flex">
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Price</label>
+                                        <input type="text" class="form-control" id="edit_product_price" required>
+                                    </div>
+                                    <div class="mb-3 col-6">
+                                        <label class="form-label">Discount (%)</label>
+                                        <input type="text" class="form-control" id="edit_product_discount" required>
+                                    </div>
+                                </div>     
+                                <div class="mb-3">
+                                    <label class="form-label">Final Price</label>
+                                    <input type="text" class="form-control" id="edit_product_final_price" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Image</label>
+                                    <input type="file" class="form-control" id="edit_product_image">
+                                </div>
+                                <button type="button" id="update_product" class="btn btn-primary w-100">Update Product</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
         <!-- Product sections ends  -->
 
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">P</div>
         <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">C</div>
-        <div class="tab-pane fade" id="disabled-tab-pane" role="tabpanel" aria-labelledby="disabled-tab" tabindex="0">...</div>
     </div>
     <!-- Page Content Ends  -->
 
@@ -110,7 +160,7 @@
                                             <img src="<?php echo base_url('/');?>${product.product_image}" class="card-img-top" alt="Product Image" width="100">
                                             <div class="card-body">
                                                 <h5 class="card-title">${product.product_name}</h5>
-                                                <p class="card-text">Price: $${product.product_price}</p>
+                                                <p class="card-text">Price: $${product.final_price} (<strike>${product.product_price}</strike>) Discount(${product.product_discount}%)</p>
                                                 <button class="btn btn-warning btn-sm edit-product" data-index="${product.id}">Edit</button>
                                                 <button class="btn btn-danger btn-sm delete-product" data-index="${product.id}">Delete</button>
                                             </div>
@@ -128,6 +178,7 @@
                 },
                 error:function(xhr,status,error){
                     console.log(error);
+                    $("#product-list").empty();
                 }
             })
         }
@@ -208,8 +259,7 @@
                 return;
             }
             var final_amount = product_price - (product_price * (discount / 100));
-            $('#product_final_price').val(final_amount.toFixed(2)); 
-            console.log(final_amount.toFixed(2));
+            $('#product_final_price').val(final_amount.toFixed(2));
         });
 
         // Add product form submission
@@ -225,7 +275,6 @@
                     contentType: false,
                     processData: false,
                     success:function(response){
-                        console.log(response);
                         var response = JSON.parse(response);
                         Swal.fire({
                             icon: response.status,
@@ -237,7 +286,7 @@
                         });
                     },
                     error:function(xhr,status,error){
-                        console.log('Ajax error: '+status+' '+error);
+                        // console.log('Ajax error: '+status+' '+error);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
@@ -251,6 +300,7 @@
             }
         });
 
+        // delete product function
         $(document).on('click','.delete-product',function(){
             var id = $(this).attr('data-index');
             Swal.fire({
@@ -264,14 +314,139 @@
             }).then((result) => {
                 if(result.isConfirmed){
                     $.ajax({
-
+                        url : "<?php echo site_url('admin/delete_product')?>",
+                        method: "post",
+                        data: { id : id },
+                        success:function(response){
+                            Swal.fire({
+                                icon: response.status,
+                                title: response.title,
+                                text: response.message,
+                                showConfirmButton: true,
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        },
+                        error:function(xhr,status,error){
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong',
+                                showConfirmButton: true,
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
                     });
                 }
-                console.log(result);
             });
-            console.log(id);
         });
 
+        // edit product function
+        $(document).on('click','.edit-product',function(){
+            var id = $(this).attr('data-index');
+            if(id.length !== 0){
+                $.ajax({
+                    url : "<?php echo site_url('admin/get_product_details')?>",
+                    method : "POST",
+                    data : { id : id },
+                    success: function(response){
+                        var response = JSON.parse(response);
+                        console.log(response);
+                        if(response.status === 'success'){
+                            $('#edit_product_id').val(response.data.id);
+                            $('#edit_product_name').val(response.data.product_name);
+                            $('#edit_product_price').val(response.data.product_price);
+                            $('#edit_product_discount').val(response.data.product_discount);
+                            $('#edit_product_final_price').val(response.data.final_price);
+                            $('#edit_product_image_preview').attr('src', response.data.product_image);
+                            $('#edit_company').val(response.data.company);
+                            $('#edit_category').val(response.data.category);
+
+                            $('#editProductModal').modal('show');    
+                        }else{
+                            Swal.fire({
+                                icon: response.status,
+                                title: response.title,
+                                text: response.message,
+                                showConfirmButton: true,
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function(xhr,status,error){
+                        console.log('Ajax error: '+xhr+' '+status+' '+error);
+                        Swal.fire(status,error).then((result) => { location.reload(); });
+                    }
+                });
+            }else{
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Something went wrong',
+                    showConfirmButton: true,
+                }).then((result) => {
+                    location.reload();
+                });
+            }
+        });
+
+        //edit Product discount Calculation
+        $('#edit_product_discount').on('keyup',function(){
+            var product_price = $('#edit_product_price').val();
+            var discount = $(this).val();
+
+            if (isNaN(product_price) || isNaN(discount)) {
+                return;
+            }
+            var final_amount = product_price - (product_price * (discount / 100));
+            $('#edit_product_final_price').val(final_amount.toFixed(2));
+        });
+
+        // updated edited data
+        $("#update_product").on('click',function(){
+            if($("#editProductForm").valid()){
+                var formData = new FormData();
+                formData.append('id', $('#edit_product_id').val());
+                formData.append('product_name', $('#edit_product_name').val());
+                formData.append('product_price', $('#edit_product_price').val());
+                formData.append('product_discount', $('#edit_product_discount').val());
+                formData.append('final_price', $('#edit_product_final_price').val());
+                formData.append('company', $('#edit_company').val());
+                formData.append('category', $('#edit_category').val());
+
+                var fileInput = $('#edit_product_image')[0].files[0];
+                if (fileInput) {
+                    formData.append('product_image', fileInput);
+                }
+
+                $.ajax({
+                    url : "<?php echo site_url('Admin/update_product')?>",
+                    method : "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success:function(response){
+                        var response = JSON.parse(response);
+                        Swal.fire({
+                            icon: response.status,
+                            title: response.title,
+                            text: response.message,
+                            showConfirmButton: true,
+                        }).then((result) => {
+                            location.reload();
+                        });
+                    },
+                    error:function(xhr,status,error){
+                        Swal.fire(status,error).then((result) => { location.reload(); });
+                    }
+                });
+
+            }else{
+                Swal.fire("Please Fill all fields");
+            }
+        });
     });
 
 </script>

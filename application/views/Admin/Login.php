@@ -30,6 +30,10 @@
 </head>
 <body>
     <div class="login-container">
+        <div class="d-flex align-center justify-content-between mb-3" style="margin-left: 40px;width: 250px;">
+            <img src="<?php echo base_url('/assets/logo/online_ecart_logo.png'); ?>" width="50" height="50" alt="">
+            <h3 class="text-center mr-2 mt-2"><?php echo env('SITE_NAME'); ?></h3>
+        </div>
         <h2 class="text-center login-title">Admin Login</h2>
         <hr>
         <?php if ($this->session->flashdata('error')): ?>
