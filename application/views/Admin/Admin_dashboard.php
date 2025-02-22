@@ -160,7 +160,7 @@
                                             <img src="<?php echo base_url('/');?>${product.product_image}" class="card-img-top" alt="Product Image" width="100">
                                             <div class="card-body">
                                                 <h5 class="card-title">${product.product_name}</h5>
-                                                <p class="card-text">Price: $${product.final_price} (<strike>${product.product_price}</strike>) Discount(${product.product_discount}%)</p>
+                                                <p class="card-text">Price: $${product.final_price} (<strike>$${product.product_price}</strike>) Discount(${product.product_discount}%)</p>
                                                 <button class="btn btn-warning btn-sm edit-product" data-index="${product.id}">Edit</button>
                                                 <button class="btn btn-danger btn-sm delete-product" data-index="${product.id}">Delete</button>
                                             </div>
