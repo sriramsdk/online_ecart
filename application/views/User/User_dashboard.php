@@ -20,7 +20,8 @@
                                         <img src="<?php echo base_url('/'); ?>${product.product_image}" class="card-img-top" alt="${product.product_name}">
                                         <div class="card-body text-center">
                                             <h5 class="card-title">${product.product_name}</h5>
-                                            <p class="card-text price-text">Price: <span>$${product.product_price}</span></p>
+                                            <p class="card-text price-text">Price: <span>$${product.product_price} (<strike>$${product.product_price}</strike>) Discount(${product.product_discount}%)</span></p>
+                                            Quantity
                                             <div class="quantity-control d-flex justify-content-center align-items-center mb-3">
                                                 <button class="btn btn-sm btn-outline-secondary decrease-quantity" data-index="${product.id}">-</button>
                                                 <span class="quantity mx-2">0</span>
@@ -58,6 +59,21 @@
                     }
                 });
             <?php else: ?>
+                var quantityElement = $(this).closest(".product-buttons").prev(".quantity-control").find(".quantity");
+                var quantity = parseInt(quantityElement.text().trim(), 10);
+
+                console.log(quantityElement);
+                console.log(quantity);
+
+                if (isNaN(quantity) || quantity === 0) {
+                    Swal.fire({
+                        icon: "warning",
+                        title: "Add Quantity",
+                        text: "Please add at least one quantity before ordering!",
+                    });
+                    return;
+                }
+
                 var productName = $(this).data('name');
                 var productPrice = $(this).data('price');
 
