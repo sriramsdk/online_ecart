@@ -12,7 +12,9 @@ class User extends CI_Controller
     
     public function index()
     {
-        $this->load->view('welcome_message');
+        $this->load->view('User/layouts/Header');
+        $this->load->view('User/User_dashboard');
+        $this->load->view('User/layouts/Footer');
     }
 
     // ------------------ Registration ------------------
