@@ -183,28 +183,59 @@
             color: #fff;
         }
 
+        .navbar .input-group {
+        width: 300px;
+        }
+        .search-input {
+            border-top-left-radius: 50px;
+            border-bottom-left-radius: 50px;
+        }
+        .search-btn {
+            border-top-right-radius: 50px;
+            border-bottom-right-radius: 50px;
+        }
     </style>
 </head>
 <body>
+    
 <nav class="navbar navbar-dark bg-primary">
-    <a class="navbar-brand" style="margin-left: 10px;" href="#">
-        <img src="<?php echo base_url('/assets/logo/online_ecart_logo.png'); ?>" width="35" height="35" class="ml-2 d-inline-block align-top" alt="">
-        <?php echo env('SITE_NAME'); ?>
-        <div class="profile-wrapper">
-            <img src="<?php echo $this->session->userdata('user_image') ? $this->session->userdata('user_image') : 'assets/default/user.jpg'; ?>" 
-            class="profile-image" id="profileImage">   
-            <div class="profile-menu" id="profileMenu">
-                <?php if ($this->session->userdata('user_id')): ?>
-                    <a href="#"><?php echo $this->session->userdata('user_name'); ?></a>
-                    <a href="<?php echo site_url('user/logout'); ?>">Logout</a>
-                <?php else: ?>
-                    <a href="#" id="showRegister">Sign Up</a>
-                    <a href="#" id="showLogin">Sign In</a>
-                <?php endif; ?>
+    <!-- Brand/logo section -->
+    <a class="navbar-brand d-flex align-items-center" href="#" style="margin-left: 10px;">
+        <img src="<?php echo base_url('/assets/logo/online_ecart_logo.png'); ?>" width="35" height="35" class="mr-2" alt="Site Logo">
+        <span><?php echo env('SITE_NAME'); ?></span>
+    </a>
+    
+    <!-- Improved Search form -->
+    <form class="form-inline mx-auto" action="<?php echo site_url('search'); ?>" method="get">
+        <div class="input-group">
+            <input type="search" name="q" class="form-control search-input" placeholder="Search..." aria-label="Search">
+            <div class="input-group-append">
+                <button class="btn btn-outline-light search-btn" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
             </div>
         </div>
-    </a>
+    </form>
+    
+    <!-- Profile section -->
+    <div class="profile-wrapper">
+        <img src="<?php echo $this->session->userdata('user_image') 
+            ? $this->session->userdata('user_image') 
+            : base_url('assets/default/user.jpg'); ?>" 
+             class="profile-image" id="profileImage" alt="User Image">   
+        <div class="profile-menu" id="profileMenu">
+            <?php if ($this->session->userdata('user_id')): ?>
+                <a href="#"><?php echo $this->session->userdata('user_name'); ?></a>
+                <a href="<?php echo site_url('user/logout'); ?>">Logout</a>
+            <?php else: ?>
+                <a href="#" id="showRegister">Sign Up</a>
+                <a href="#" id="showLogin">Sign In</a>
+            <?php endif; ?>
+        </div>
+    </div>
 </nav>
+
+
 <!-- Register Modal -->
 <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
     <div class="modal-dialog">
