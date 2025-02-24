@@ -109,7 +109,7 @@
             <div class="footer-grid">
                 <!-- Column 1: Company Info -->
                 <div class="footer-item">
-                    <h5>Your Company</h5>
+                    <h5><?php echo env('SITE_NAME'); ?></h5>
                     <p>Delivering quality products worldwide with passion and care.</p>
                 </div>
 

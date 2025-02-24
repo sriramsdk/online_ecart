@@ -7,6 +7,7 @@ class Admin extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('Product_Model');
+        $this->load->model('User_model');
     }
 
     // index function
@@ -210,7 +211,33 @@ class Admin extends CI_Controller {
             echo json_encode(['status' => 'error','title' => 'Product Not Updated', 'message' => "Product not updated"]);   
         }
             
-        
+    }
+
+    // fetch Users list function
+    public function fetchUsers() {
+        $list = $this->User_model->get_datatables();
+        $data = array();
+        $no = $_POST['start'];
+
+        foreach ($list as $user) {
+            $no++;
+            $row = array();
+            $row['id'] = $user->id;
+            $row['name'] = $user->name;
+            $row['email'] = $user->email;
+            $row['phone'] = $user->phone;
+            $row['created_at'] = $user->created_at;
+            $data[] = $row;
+        }
+
+        $output = array(
+            "draw" => $_POST['draw'],
+            "recordsTotal" => $this->User_model->count_all(),
+            "recordsFiltered" => $this->User_model->count_filtered(),
+            "data" => $data,
+        );
+
+        echo json_encode($output);
     }
 
 }

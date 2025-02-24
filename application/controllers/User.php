@@ -7,6 +7,7 @@ class User extends CI_Controller
     {
         parent::__construct();
         $this->load->model('User_model');
+        $this->load->model('Order_Model');
         $this->load->library(['session', 'upload']);
     }
     
@@ -96,6 +97,31 @@ class User extends CI_Controller
         $this->session->unset_userdata(['user_id', 'user_name', 'user_email', 'user_image']);
         $this->session->set_flashdata('success', 'Logged out successfully!');
         redirect('/');
+    }
+
+    // place order function
+    public function place_order(){
+        $user_id = $this->session->userdata('user_id');
+        $product_id = $this->input->post('product_id');
+        $user_address = $this->input->post('user_address');
+        $payment_type = $this->input->post('payment_type');
+        $quantity = $this->input->post('quantity');
+
+        $data = [
+            'user_id' => $user_id,
+            'product_id' => $product_id,
+            'user_address' => $user_address,
+            'payment_type' => $payment_type,
+            'quantity' => $quantity,
+        ];
+
+        $response = $this->Order_Model->place_order($data);
+
+        if($response){
+            echo json_encode(['status' => 'success','title' => 'Order Placed', 'message' => "Your order Placed Successfully"]);
+        }else{
+            echo json_encode(['status' => 'error','title' => 'Order Not Placed', 'message' => "Your Order Not placed"]);   
+        }
     }
 }
 ?>

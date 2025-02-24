@@ -129,7 +129,22 @@
         <!-- Product sections ends  -->
 
         <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">P</div>
-        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">C</div>
+
+        <!-- users list section start -->
+        <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
+            <table id="userTable" class="display">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Created At</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <!-- users list section ends -->
     </div>
     <!-- Page Content Ends  -->
 
@@ -446,6 +461,22 @@
             }else{
                 Swal.fire("Please Fill all fields");
             }
+        });
+
+        $('#userTable').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                "url": "<?= site_url('Admin/fetchUsers') ?>",
+                "type": "POST"
+            },
+            "columns": [
+                { "data": "id" },
+                { "data": "name" },
+                { "data": "email" },
+                { "data": "phone" },
+                { "data": "created_at" }
+            ]
         });
     });
 
