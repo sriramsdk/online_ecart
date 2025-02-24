@@ -151,7 +151,7 @@
                                         <img src="<?php echo base_url('/'); ?>${product.product_image}" class="card-img-top" alt="${product.product_name}">
                                         <div class="card-body text-center">
                                             <h5 class="card-title">${product.product_name}</h5>
-                                            <p class="card-text price-text">Price: <span>$${product.product_price} (<strike>$${product.product_price}</strike>) Discount(${product.product_discount}%)</span></p>
+                                            <p class="card-text price-text">Price: <span>$${product.final_price} (<strike>$${product.product_price}</strike>) Discount(${product.product_discount}%)</span></p>
                                             Quantity
                                             <div class="quantity-control d-flex justify-content-center align-items-center mb-3">
                                                 <button class="btn btn-sm btn-outline-secondary decrease-quantity" data-index="${product.id}">-</button>
@@ -160,7 +160,7 @@
                                                 <button class="btn btn-sm btn-outline-secondary increase-quantity" data-index="${product.id}">+</button>
                                             </div>
                                             <div class="btn-group product-buttons" role="group">
-                                                <button class="btn order-product" data-id="${product.id}" data-name="${product.product_name}" data-price="${product.product_price}">
+                                                <button class="btn order-product" data-id="${product.id}" data-name="${product.product_name}" data-price="${product.final_price}">
                                                     <i class="fas fa-shopping-cart"></i> Order
                                                 </button>
                                             </div>
@@ -194,8 +194,8 @@
                 var quantityElement = $(this).closest(".product-buttons").prev(".quantity-control").find(".quantity");
                 var quantity = parseInt(quantityElement.text().trim(), 10);
 
-                console.log(quantityElement);
-                console.log(quantity);
+                // console.log(quantityElement);
+                // console.log(quantity);
 
                 if (isNaN(quantity) || quantity === 0) {
                     Swal.fire({
@@ -206,6 +206,7 @@
                     return;
                 }
 
+                var id = $(this).data('id');
                 var productName = $(this).data('name');
                 var productPrice = $(this).data('price');
                 var companyName = $(this).data('company');
@@ -213,36 +214,42 @@
                 Swal.fire({
                     title: 'Order This Product',
                     html: `
-    <div class="mb-3 border rounded p-3 bg-light shadow-sm">
-    <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-box-open me-2 text-primary fs-4"></i>
-        <label class="form-label fw-bold mb-0">Product Name</label>
-    </div>
-    <input type="text" class="form-control border-primary" value="${productName}" readonly>
-</div>
+                    <form id="order_form_${id}">
+                        <div class="mb-3 border rounded p-3 bg-light shadow-sm">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-box-open me-2 text-primary fs-4"></i>
+                                <label class="form-label fw-bold mb-0">Product Name</label>
+                            </div>
+                            <input type="hidden" id="product_id_${id}" value="${id}">
+                            <input type="text" class="form-control border-primary" id="product_name_${id}" value="${productName}" readonly>
+                        </div>
 
-<div class="mb-3 border rounded p-3 bg-light shadow-sm">
-    <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-dollar-sign me-2 text-success fs-4"></i>
-        <label class="form-label fw-bold mb-0">Price</label>
-    </div>
-    <input type="text" class="form-control border-success" value="$${productPrice}" readonly>
-</div>
+                        <div class="mb-3 border rounded p-3 bg-light shadow-sm">
+                            <div class="d-flex align-items-center mb-3">
+                                <i class="fas fa-dollar-sign me-2 text-success fs-4"></i>
+                                <label class="form-label fw-bold mb-0">Price</label>
+                            </div>
+                            <input type="text" class="form-control border-success" id="product_price_${id}" value="${productPrice}" readonly>
+                        </div>
 
-<div class="mb-3 border rounded p-3 bg-light shadow-sm">
-    <div class="d-flex align-items-center mb-2">
-        <i class="fas fa-map-marker-alt me-2 text-danger fs-4"></i>
-        <label class="form-label fw-bold mb-0">Address</label>
-    </div>
-    <textarea class="form-control border-danger" id="orderAddress" placeholder="Enter your address" rows="3"></textarea>
-</div>
-
+                        <div class="mb-3 border rounded p-3 bg-light shadow-sm">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt me-2 text-danger fs-4"></i>
+                                <label class="form-label fw-bold mb-0">Address</label>
+                            </div>
+                            <textarea class="form-control border-danger" id="orderAddress_${id}" placeholder="Enter your address" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3 border rounded p-3 bg-light shadow-sm">
+                            Payment Type : 
+                            <input type="radio" id="payment_type_${id}" value="cash" checked> Cash On Delivery
+                        </div>
+                    </form>
                     `,
                     showCancelButton: true,
                     confirmButtonText: 'Submit Order',
                     cancelButtonText: 'Cancel',
                     preConfirm: () => {
-                        const address = document.getElementById('orderAddress').value;
+                        const address = document.getElementById('orderAddress_'+id).value;
                         if (!address) {
                             Swal.showValidationMessage('Address is required');
                         }
@@ -250,6 +257,28 @@
                     }
                 }).then((result) => {
                     if (result.isConfirmed) {
+                        var address = $("#orderAddress_"+id).val();
+                        var payment_type = $("#payment_type_"+id).val();
+                        $.ajax({
+                            url : "<?php echo site_url('User/place_order');?>",
+                            method : "POST",
+                            data : { product_id : id , user_address : address, quantity : quantity , payment_type : payment_type},
+                            success:function(response){
+                                // console.log(response);
+                                var response = JSON.parse(response);
+                                Swal.fire({
+                                    icon: response.status,
+                                    title: response.title,
+                                    text: response.message,
+                                    showConfirmButton: true,
+                                }).then((result) => {
+                                    location.reload();
+                                });
+                            },
+                            error: function(xhr,status,error){
+                                Swal.fire(status,error).then((result) => { location.reload(); });
+                            }
+                        })
                         Swal.fire('Order Placed!', 'Your order has been placed successfully.', 'success');
                     }
                 });
