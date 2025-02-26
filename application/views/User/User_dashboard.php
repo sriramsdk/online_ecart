@@ -18,48 +18,50 @@
     
         <!-- Sidebar -->
         <div class="sidebar p-3">
+
+            <?php if(!empty($categories)){?>
             <h2 class="fw-bold mb-4">Categories</h2>
             <ul class="list-group mb-4">
-                <li class="list-group-item category-item" data-category="mouse">Mouse</li>
-                <li class="list-group-item category-item" data-category="motherboard">MotherBoard</li>
-                <li class="list-group-item category-item" data-category="keyboard">Keyboard</li>
-                <li class="list-group-item category-item" data-category="monitor">Monitor</li>
-                <li class="list-group-item category-item" data-category="Battery">Battery</li>
+                <?php foreach($categories as $key => $category){?>
+                <button class="list-group-item category-item category" data-category="<?php echo $category['category'];?>"><?php echo ucfirst($category['category']);?></button>
+                <?php } ?>
             </ul>
-            <h2 class="fw-bold mb-4">Filters</h2>
-<div class="mb-4">
-    <label class="form-label">Price Range</label>
-    <ul class="list-group price-filter">
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="500-600" id="price-500-600">
-            <label for="price-500-600">500 - 600</label>
-        </li>
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="600-700" id="price-600-700">
-            <label for="price-600-700">600 - 700</label>
-        </li>
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="700-800" id="price-700-800">
-            <label for="price-700-800">700 - 800</label>
-        </li>
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="800-900" id="price-800-900">
-            <label for="price-800-900">800 - 900</label>
-        </li>
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="900-1000" id="price-900-1000">
-            <label for="price-900-1000">900 - 1000</label>
-        </li>
-        <li class="list-group-item">
-            <input type="radio" name="priceFilter" value="below-500" id="price-below-500">
-            <label for="price-below-500">Below 500</label>
-        </li>
-    </ul>
-    <button id="applyFilter" class="btn btn-primary mt-3">Apply Filter</button>
-</div>
+            <?php } ?>
 
+            <!-- <h2 class="fw-bold mb-4">Filters</h2> -->
 
-            <div class="mb-4">
+            <!-- <div class="mb-4">
+                <label class="form-label">Price Range</label>
+                <ul class="list-group price-filter">
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="500-600" id="price-500-600">
+                        <label for="price-500-600">500 - 600</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="600-700" id="price-600-700">
+                        <label for="price-600-700">600 - 700</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="700-800" id="price-700-800">
+                        <label for="price-700-800">700 - 800</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="800-900" id="price-800-900">
+                        <label for="price-800-900">800 - 900</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="900-1000" id="price-900-1000">
+                        <label for="price-900-1000">900 - 1000</label>
+                    </li>
+                    <li class="list-group-item">
+                        <input type="radio" name="priceFilter" value="below-500" id="price-below-500">
+                        <label for="price-below-500">Below 500</label>
+                    </li>
+                </ul>
+                <button id="applyFilter" class="btn btn-primary mt-3">Apply Filter</button>
+            </div> -->
+
+            <!-- <div class="mb-4">
                 <label class="form-label">Rating</label>
                 <select class="form-select" id="ratingFilter">
                     <option value="">All Ratings</option>
@@ -68,7 +70,8 @@
                     <option value="2">2 Stars & Up</option>
                     <option value="1">1 Star & Up</option>
                 </select>
-            </div>
+            </div> -->
+
         </div>
 
         <!-- Product List -->
@@ -86,16 +89,16 @@
 
                 <div class="carousel-inner">
                     <div class="carousel-item active" data-bs-interval="3000">
-                        <img src="<?php echo base_url('application/views/User/images/offer1.jpg'); ?>" class="d-block w-100" alt="Offer 1">
+                        <img src="<?php echo base_url('assets/banner/offer1.jpg'); ?>" class="d-block w-100" alt="Offer 1">
                     </div>
                     <div class="carousel-item">
-                        <img src="<?php echo base_url('application/views/User/images/offer2.jpg'); ?>" class="d-block w-100" alt="Offer 2">
+                        <img src="<?php echo base_url('assets/banner/offer2.jpg'); ?>" class="d-block w-100" alt="Offer 2">
                     </div>
                     <div class="carousel-item">
-                        <img src="<?php echo base_url('application/views/User/images/offer3.jpg'); ?>" class="d-block w-100" alt="Offer 3">
+                        <img src="<?php echo base_url('assets/banner/offer3.jpg'); ?>" class="d-block w-100" alt="Offer 3">
                     </div>
                     <div class="carousel-item">
-                        <img src="<?php echo base_url('application/views/User/images/offer4.jpg'); ?>" class="d-block w-100" alt="Offer 4">
+                        <img src="<?php echo base_url('assets/banner/offer4.jpg'); ?>" class="d-block w-100" alt="Offer 4">
                     </div>
                 </div>
 
@@ -108,17 +111,19 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
+            
+            <?php if(!empty($companies)){?>
+                <div class="d-flex justify-content-center align-items-center gap-3 my-4">
+                    <?php foreach($companies as $key => $company){?>
+                        <button type="button" class="btn btn-outline-primary company" data-company="<?php echo $company['company'];?>"> <?php echo ucfirst($company['company']);?> </button>
+                    <?php }?>
+                </div>
+            <?php } ?>
 
-<div class="d-flex justify-content-center align-items-center gap-3 my-4">
-  <button type="button" class="btn btn-primary btn-lg custom-btn">Lenon</button>
-  <button type="button" class="btn btn-success btn-lg custom-btn">HCL</button>
-  <button type="button" class="btn btn-info btn-lg custom-btn">Zoho</button>
-  <button type="button" class="btn btn-warning btn-lg custom-btn">TCS</button>
-</div>
 
-
-<!-- Product List -->
+            <!-- Product List -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="product-list"></div>
+
         </div>
     </div>
 
@@ -146,11 +151,12 @@
                         if (products.length !== 0) {
                             $.each(products, function(index, product) {
                                 let productCard = `
-                                <div class="col-md-3 mb-4">
+                                <div class="col-md-3 mb-4 products ${product.company} ${product.category}">
                                     <div class="card product-card shadow-sm">
                                         <img src="<?php echo base_url('/'); ?>${product.product_image}" class="card-img-top" alt="${product.product_name}">
                                         <div class="card-body text-center">
                                             <h5 class="card-title">${product.product_name}</h5>
+                                            <p class="card-text price-text">${product.company}</p>
                                             <p class="card-text price-text">Price: <span>$${product.final_price} (<strike>$${product.product_price}</strike>) Discount(${product.product_discount}%)</span></p>
                                             Quantity
                                             <div class="quantity-control d-flex justify-content-center align-items-center mb-3">
@@ -305,9 +311,44 @@
             }
         }
     });
+    $('.products').show();
+    $('.company').on('click',function(){
+        var company = $(this).attr('data-company');
+        $('.products').show();
+        $('.'+company).not(this).hide();
+    });
+
+    $('.category').on('click',function(){
+        var category = $(this).attr('data-category');
+        $('.products').show();
+        $('.'+category).not(this).hide();
+    });
+
+    $('#search_button').on('click',function(e){
+        e.preventDefault();
+        var search = $("#search").val();
+        if(search.length !== 0){
+            var found = false;
+
+            $('.products').each(function() {
+                var productText = $(this).text().toLowerCase();
+                // console.log(productText);
+                if (productText.includes(search)) {
+                    $(this).show();
+                    found = true;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            if (!found) {
+                alert('No products found');
+                $('.product').show();
+            }
+        }else{
+            alert('Please type word to search');
+        }
+    });
 </script>
-
-
-
 </body>
 </html>

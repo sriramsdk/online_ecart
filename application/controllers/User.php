@@ -8,13 +8,21 @@ class User extends CI_Controller
         parent::__construct();
         $this->load->model('User_model');
         $this->load->model('Order_Model');
+        $this->load->model('Product_Model');
         $this->load->library(['session', 'upload']);
     }
     
     public function index()
     {
+        $companies = $this->Product_Model->get_companies();
+        $categories = $this->Product_Model->get_categories();
+        $data = [
+            "companies" => $companies,
+            "categories" => $categories
+        ];
+        // echo "<pre>";print_r($data);exit();
         $this->load->view('User/layouts/Header');
-        $this->load->view('User/User_dashboard');
+        $this->load->view('User/User_dashboard',$data);
         $this->load->view('User/layouts/Footer');
     }
 
@@ -122,6 +130,17 @@ class User extends CI_Controller
         }else{
             echo json_encode(['status' => 'error','title' => 'Order Not Placed', 'message' => "Your Order Not placed"]);   
         }
+    }
+
+    // Users orders list function
+    public function my_orders(){
+        $user_id = $this->session->userdata('user_id');
+        $data['my_orders'] = $this->Order_Model->my_orders($user_id);
+        $data['nav_fields'] = "hide";
+        $this->load->view('User/layouts/Header');
+        $this->load->view('User/Orders_list',$data);
+        $this->load->view('User/layouts/Footer');
+        // echo "<pre>";print_r($data);exit();
     }
 }
 ?>

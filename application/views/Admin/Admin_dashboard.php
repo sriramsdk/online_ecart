@@ -128,21 +128,53 @@
         </div>
         <!-- Product sections ends  -->
 
-        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">P</div>
-
+        <!-- Orders section starts -->
+        <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+            <div class="container-fluid mt-5 mb-5 w-100 h-100">
+                <table id="my_orders_table" class="table table-bordered mt-2 mb-2">
+                    <thead>
+                        <th>Product Name</th>
+                        <th>Product Price</th>
+                        <th>Ordered User</th>
+                        <th>Order status</th>
+                    </thead>
+                    <tbody>
+                        <?php if(!empty($all_orders)){?>
+                            <?php foreach($all_orders as $key => $orders){?>
+                                <tr>
+                                    <td>
+                                        <img id="edit_product_image_preview" src="<?php echo base_url('/').$orders['product_image']?>" alt="Product Image" class="img-fluid mt-2 ml-3" width="150">
+                                        <p class="ml-3"><?= $orders['product_name'];?></p>
+                                    </td>
+                                    <td><?= $orders['final_price'];?></td>
+                                    <td><?= $orders['name'];?></td>
+                                    <td><button class="btn btn-success">Ordered</button></td>
+                                </tr>
+                            <?php } ?>
+                        <?php }else{ ?>
+                            <tr>No Orders Available</tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- Orders sections ends -->
+         
         <!-- users list section start -->
         <div class="tab-pane fade" id="contact-tab-pane" role="tabpanel" aria-labelledby="contact-tab" tabindex="0">
-            <table id="userTable" class="display">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Created At</th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="container-fluid mt-5 mb-5">
+                <table id="userTable" class="display table table-bordered w-100 mt-5 mb-5">
+                    <thead class="bg-primary">
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Created At</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
         </div>
         <!-- users list section ends -->
     </div>
@@ -478,6 +510,9 @@
                 { "data": "created_at" }
             ]
         });
+
+        $('#my_orders_table').DataTable();
+
     });
 
 </script>

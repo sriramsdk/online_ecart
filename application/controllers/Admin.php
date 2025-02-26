@@ -8,6 +8,7 @@ class Admin extends CI_Controller {
         parent::__construct();
         $this->load->model('Product_Model');
         $this->load->model('User_model');
+        $this->load->model('Order_Model');
     }
 
     // index function
@@ -16,9 +17,9 @@ class Admin extends CI_Controller {
         if (!$this->session->userdata('admin_logged_in')) {
             redirect('Admin/Login');
         }
-
+        $data['all_orders'] = $this->Order_Model->get_all_orders();
         $this->load->view('Admin/layouts/Header');
-        $this->load->view('Admin/Admin_dashboard');
+        $this->load->view('Admin/Admin_dashboard',$data);
         $this->load->view('Admin/layouts/Footer');
     }
 

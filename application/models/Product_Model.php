@@ -38,6 +38,16 @@ class Product_Model extends CI_Model{
         return $response;
     }
 
+    public function get_companies(){
+        $data = $this->db->select('company,count(*) as count')->from('products')->group_by('company')->order_by('count','desc')->limit('10')->get()->result_array();
+        return $data;
+    }
+
+    public function get_categories(){
+        $data = $this->db->select('category,count(*) as count')->from('products')->group_by('category')->order_by('count','desc')->limit('15')->get()->result_array();
+        return $data;
+    }
+
 }
 
 ?>

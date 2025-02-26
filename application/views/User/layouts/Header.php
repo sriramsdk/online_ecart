@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>User Dashboard</title>
+    <link href="<?php echo base_url('assets/css/style.css');?>">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         .error{
             color: red;
@@ -206,19 +209,26 @@
     </a>
     
     <!-- Improved Search form -->
-    <form class="form-inline mx-auto" action="<?php echo site_url('search'); ?>" method="get">
+    <form class="form-inline mx-auto d-flex">
         <div class="input-group">
-            <input type="search" name="q" class="form-control search-input" placeholder="Search..." aria-label="Search">
+            <input type="search" name="search" id="search" class="form-control search-input" placeholder="Search..." aria-label="Search">
             <div class="input-group-append">
-                <button class="btn btn-outline-light search-btn" type="submit">
+                <button class="btn btn-outline-light search-btn" id="search_button">
                     <i class="fa fa-search"></i>
                 </button>
             </div>
         </div>
     </form>
     
+    <?php if ($this->session->userdata('user_id')){ ?>
+        <div class="input-group mt-2 mr-2">
+            <a href="<?php echo site_url('User/my_orders');?>" class="btn btn-warning">My Orders</a>
+        </div>
+    <?php }?>
+    
     <!-- Profile section -->
     <div class="profile-wrapper">
+        
         <img src="<?php echo $this->session->userdata('user_image') 
             ? $this->session->userdata('user_image') 
             : base_url('assets/default/user.jpg'); ?>" 
